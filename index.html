@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>✦ COSMOS OS: NEBULA MEMORY ✦</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Orbitron:wght@400;600;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --void-deep: #020010;
+      --void-blue: #060e2b;
+      --starlight: #e8edff;
+      --text-dim: #8ba0d4;
+      --cyan: #22d3ee;
+      --purple: #c084fc;
+      --pink: #f472b6;
+      --gold: #fbbf24;
+      --card-radius: 1.6rem;
+      --card-radius-sm: 1.1rem;
+      --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--void-deep);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      margin: 0;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* ============ ГЛУБОКИЙ КОСМИЧЕСКИЙ ФОН С ГАЛАКТИЧЕСКИМ ЯДРОМ ============ */
+    .cosmic-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .galactic-core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70vmax;
+      height: 70vmax;
+      background: 
+        radial-gradient(ellipse at 50% 50%, rgba(34, 211, 238, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 40% 45%, rgba(192, 132, 252, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 55% 50%, rgba(251, 191, 36, 0.03) 0%, transparent 35%);
+      animation: galacticPulse 12s ease-in-out infinite;
+    }
+
+    @keyframes galacticPulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+      50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    }
+
+    /* Звёздная пыль */
+    .star-dust {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(1px 1px at 8% 15%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1.5px 1.5px at 22% 35%, rgba(200,220,255,0.8), transparent),
+        radial-gradient(1px 1px at 38% 12%, #fff, transparent),
+        radial-gradient(2px 2px at 55% 70%, rgba(180,200,255,0.7), transparent),
+        radial-gradient(1px 1px at 72% 18%, rgba(255,255,255,0.85), transparent),
+        radial-gradient(1.5px 1.5px at 85% 55%, rgba(200,220,255,0.75), transparent),
+        radial-gradient(1px 1px at 15% 80%, rgba(220,230,255,0.8), transparent),
+        radial-gradient(2px 2px at 92% 8%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 48% 60%, #e0e8ff, transparent),
+        radial-gradient(1.5px 1.5px at 65% 42%, rgba(200,220,255,0.8), transparent);
+      background-size: 300px 300px;
+      animation: dustDrift 30s linear infinite;
+    }
+
+    @keyframes dustDrift {
+      0% { transform: translate(0, 0) rotate(0deg); opacity: 0.6; }
+      33% { transform: translate(10px, -8px) rotate(0.5deg); opacity: 0.85; }
+      66% { transform: translate(-5px, 12px) rotate(-0.3deg); opacity: 0.7; }
+      100% { transform: translate(0, 0) rotate(0deg); opacity: 0.6; }
+    }
+
+    /* Созвездия */
+    .constellation {
+      position: absolute;
+      inset: 0;
+    }
+
+    .constellation svg {
+      width: 100%;
+      height: 100%;
+      opacity: 0.35;
+      animation: constellationFade 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes constellationFade {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.5; }
+    }
+
+    /* Падающие звёзды */
+    .shooting-stars-container {
+      position: absolute;
+      inset: 0;
+    }
+
+    .shooting-star {
+      position: absolute;
+      width: 2.5px;
+      height: 2.5px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 10px 3px rgba(255,255,255,0.7);
+      animation: shootAcross 5s linear infinite;
+      opacity: 0;
+    }
+
+    .shooting-star::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      width: 80px;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7));
+    }
+
+    .shooting-star:nth-child(1) { top: 12%; left: 75%; animation-delay: 0s; }
+    .shooting-star:nth-child(2) { top: 28%; left: 55%; animation-delay: 2.8s; }
+    .shooting-star:nth-child(3) { top: 8%; left: 68%; animation-delay: 5.5s; }
+    .shooting-star:nth-child(4) { top: 38%; left: 82%; animation-delay: 1.7s; }
+    .shooting-star:nth-child(5) { top: 18%; left: 48%; animation-delay: 4.1s; }
+
+    @keyframes shootAcross {
+      0% { opacity: 0; transform: translate(0, 0) rotate(-30deg) scale(0.5); }
+      3% { opacity: 1; transform: translate(-30px, 20px) rotate(-30deg) scale(1); }
+      10% { opacity: 0; transform: translate(-400px, 260px) rotate(-30deg) scale(0.3); }
+      100% { opacity: 0; transform: translate(-400px, 260px) rotate(-30deg) scale(0.3); }
+    }
+
+    /* Парящие частицы космической пыли */
+    .floating-dust {
+      position: absolute;
+      inset: 0;
+    }
+
+    .dust-mote {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      animation: moteDrift 12s linear infinite;
+    }
+
+    @keyframes moteDrift {
+      0% { transform: translateY(105vh) scale(0); opacity: 0; }
+      15% { opacity: 0.8; }
+      85% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1.8); opacity: 0; }
+    }
+
+    /* ============ ЗАГРУЗОЧНЫЙ ЭКРАН ============ */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, #08082a 0%, #000008 100%);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 1.2s ease-out, visibility 1.2s;
+    }
+
+    .loader-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+    }
+
+    .loader-orbit-system {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loader-sun {
+      width: 55px;
+      height: 55px;
+      background: radial-gradient(circle, #ffdd55, #ff7700);
+      border-radius: 50%;
+      box-shadow: 0 0 70px #ffaa00, 0 0 140px rgba(255,140,0,0.5), 0 0 220px rgba(255,100,0,0.25);
+      z-index: 3;
+      animation: loaderSunGlow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes loaderSunGlow {
+      0%, 100% { box-shadow: 0 0 70px #ffaa00, 0 0 140px rgba(255,140,0,0.5); }
+      50% { box-shadow: 0 0 100px #ffcc44, 0 0 200px rgba(255,150,0,0.7); }
+    }
+
+    .loader-orbit {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.06);
+      animation: orbitSpin linear infinite;
+    }
+
+    .loader-planet-dot {
+      position: absolute;
+      border-radius: 50%;
+      box-shadow: 0 0 20px currentColor;
+    }
+
+    .orbit-1 { width: 120px; height: 120px; animation-duration: 3.5s; }
+    .orbit-1 .loader-planet-dot { width: 9px; height: 9px; top: 8px; left: 50%; background: #38bdf8; color: #38bdf8; }
+
+    .orbit-2 { width: 200px; height: 200px; animation-duration: 6s; animation-direction: reverse; }
+    .orbit-2 .loader-planet-dot { width: 12px; height: 12px; top: 18px; left: 15%; background: #c084fc; color: #c084fc; }
+
+    .orbit-3 { width: 290px; height: 290px; animation-duration: 9s; }
+    .orbit-3 .loader-planet-dot { width: 15px; height: 15px; bottom: 25px; right: 18%; background: #f472b6; color: #f472b6; }
+
+    @keyframes orbitSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    #loading-screen.orbit-lock .loader-orbit {
+      animation: none !important;
+      transition: transform 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: rotate(0deg) !important;
+    }
+
+    .loading-text-block {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .loading-status-line {
+      font-family: 'Orbitron', monospace;
+      font-weight: 400;
+      letter-spacing: 6px;
+      color: #8ba0d4;
+      font-size: 0.65rem;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .loading-authors-line {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 14px;
+      background: #22d3ee;
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: cursorBlink 0.9s step-end infinite;
+      box-shadow: 0 0 10px #22d3ee;
+    }
+
+    @keyframes cursorBlink { 50% { opacity: 0; } }
+
+    /* ============ ОСНОВНОЙ КОНТЕЙНЕР ============ */
+    .app-shell {
+      display: flex;
+      width: 100%;
+      max-width: 1600px;
+      gap: 1.6rem;
+      position: relative;
+      z-index: 20;
+      align-items: flex-start;
+    }
+
+    /* ============ САЙДБАР ============ */
+    .sidebar-panel {
+      width: 285px;
+      flex-shrink: 0;
+      background: rgba(4, 8, 24, 0.55);
+      backdrop-filter: blur(60px) saturate(180%);
+      -webkit-backdrop-filter: blur(60px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 2.5rem;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      box-shadow: 
+        0 50px 80px -30px rgba(0,0,0,0.9),
+        inset 0 0 60px rgba(34, 211, 238, 0.04),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sidebar-panel::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -40%;
+      width: 180%;
+      height: 180%;
+      background: radial-gradient(ellipse at 35% 25%, rgba(192,132,252,0.07), transparent 65%);
+      pointer-events: none;
+    }
+
+    .brand-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(180deg, #e0f2fe 0%, #7dd3fc 60%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 22px rgba(56,189,248,0.5));
+      position: relative;
+      z-index: 1;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 0.7rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.025);
+      border-radius: 1.3rem;
+      padding: 0.95rem 0.5rem;
+      flex: 1;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: all 0.4s var(--transition-smooth);
+    }
+
+    .stat-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(56,189,248,0.25);
+      box-shadow: 0 0 30px rgba(34,211,238,0.12);
+      transform: translateY(-2px);
+    }
+
+    .stat-value {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f0f4ff;
+      letter-spacing: 1px;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #6b7fa8;
+      margin-top: 2px;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cosmic-btn {
+      padding: 0.9rem 1.2rem;
+      border-radius: 1.3rem;
+      font-weight: 600;
+      font-size: 0.82rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #dde4f5;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: all 0.35s var(--transition-smooth);
+      backdrop-filter: blur(15px);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.5px;
+    }
+
+    .cosmic-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+
+    .cosmic-btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .cosmic-btn:hover {
+      background: rgba(34,211,238,0.08);
+      border-color: rgba(34,211,238,0.4);
+      box-shadow: 0 0 35px rgba(34,211,238,0.25);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+
+    .cosmic-btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-hint-glow {
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.6), rgba(15, 23, 42, 0.8));
+      border-color: rgba(34,211,238,0.35);
+    }
+
+    .inventory-section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .inventory-title {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #6b7fa8;
+      margin-bottom: 0.7rem;
+    }
+
+    .inventory-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .inv-badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.12);
+      cursor: pointer;
+      transition: all 0.35s var(--transition-bounce);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 0.75rem;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .inv-badge::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: transparent;
+      transition: all 0.35s;
+    }
+
+    .inv-badge:hover {
+      transform: scale(1.3);
+      border-color: #c084fc;
+      box-shadow: 0 0 35px rgba(192,132,252,0.6);
+      z-index: 10;
+    }
+
+    .inv-badge.pop-anim {
+      animation: popBounce 0.55s var(--transition-bounce);
+    }
+
+    @keyframes popBounce {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.35); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+
+    /* ============ ИГРОВАЯ СЕТКА ============ */
+    .game-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1.1rem;
+      perspective: 2200px;
+    }
+
+    .card-wrapper {
+      aspect-ratio: 3 / 4.3;
+      cursor: pointer;
+      transition: transform 0.35s var(--transition-bounce);
+      position: relative;
+      animation: cardFloat 8s ease-in-out infinite;
+    }
+
+    .card-wrapper:nth-child(odd) { animation-delay: -4s; }
+    .card-wrapper:nth-child(3n) { animation-delay: -2s; }
+    .card-wrapper:nth-child(5n+2) { animation-delay: -6s; }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .card-wrapper:hover {
+      transform: translateY(-12px) scale(1.03);
+      z-index: 10;
+      animation: none;
+    }
+
+    .card-glow {
+      position: absolute;
+      inset: -3px;
+      border-radius: var(--card-radius);
+      background: transparent;
+      transition: all 0.5s;
+      z-index: -1;
+      opacity: 0;
+    }
+
+    .card-wrapper:hover .card-glow {
+      background: linear-gradient(135deg, rgba(34,211,238,0.35), rgba(192,132,252,0.35), rgba(244,114,182,0.3));
+      filter: blur(18px);
+      inset: -8px;
+      opacity: 1;
+      border-radius: calc(var(--card-radius) + 4px);
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      border-radius: var(--card-radius);
+    }
+
+    .card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      box-shadow: 0 30px 50px -18px rgba(0,0,0,0.95);
+    }
+
+    .card-back {
+      background: radial-gradient(circle at 35% 35%, #1a2548, #020617);
+      border: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="35" stroke="white" stroke-opacity="0.12" stroke-width="1"/><circle cx="60" cy="60" r="25" stroke="white" stroke-opacity="0.08" stroke-width="0.5" stroke-dasharray="4 4"/><path d="M60 18 L64 38 L84 42 L64 46 L60 66 L56 46 L36 42 L56 38 Z" fill="white" fill-opacity="0.18"/><circle cx="60" cy="60" r="8" fill="white" fill-opacity="0.12"/></svg>');
+      background-size: 65%;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .card-front {
+      transform: rotateY(180deg);
+      background: #010510;
+      border: 1px solid rgba(255,255,255,0.12);
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Эффект при совпадении */
+    .card-inner.matched .card-front {
+      border-color: rgba(34,211,238,0.5);
+      box-shadow: inset 0 0 50px rgba(34,211,238,0.2);
+      animation: matchGlow 1.5s ease-out;
+    }
+
+    @keyframes matchGlow {
+      0% { box-shadow: inset 0 0 80px rgba(34,211,238,0.5), 0 0 40px rgba(34,211,238,0.4); }
+      100% { box-shadow: inset 0 0 20px rgba(34,211,238,0.1), 0 0 0 rgba(34,211,238,0); }
+    }
+
+    /* Планетарные градиенты */
+    .planet-sun { background-image: radial-gradient(circle at 38% 38%, #fef08a 0%, #f59e0b 40%, #b45309 100%); }
+    .planet-mercury { background-image: radial-gradient(circle at 38% 38%, #d1d5db 0%, #6b7280 50%, #374151 100%); }
+    .planet-venus { background-image: radial-gradient(circle at 42% 42%, #fcd34d 0%, #d97706 45%, #78350f 100%); }
+    .planet-earth { background-image: radial-gradient(circle at 38% 38%, #60a5fa 0%, #2563eb 45%, #064e3b 100%); }
+    .planet-mars { background-image: radial-gradient(circle at 38% 38%, #f87171 0%, #dc2626 45%, #7f1d1d 100%); }
+    .planet-jupiter { background-image: radial-gradient(circle at 38% 38%, #ddd6fe 0%, #8b5cf6 45%, #4c1d95 100%); }
+    .planet-saturn { background-image: radial-gradient(circle at 38% 38%, #fef3c7 0%, #d97706 40%, #9d174d 100%); }
+    .planet-uranus { background-image: radial-gradient(circle at 38% 38%, #a5f3fc 0%, #0891b2 45%, #164e63 100%); }
+    .planet-neptune { background-image: radial-gradient(circle at 38% 38%, #93c5fd 0%, #1d4ed8 45%, #1e3a8a 100%); }
+    .planet-moon { background-image: radial-gradient(circle at 38% 38%, #f3f4f6 0%, #9ca3af 50%, #4b5563 100%); }
+    .planet-galaxy { background-image: radial-gradient(circle at 38% 38%, #c4b5fd 0%, #7c3aed 45%, #2e1065 100%); }
+    .planet-nebula { background-image: radial-gradient(circle at 38% 38%, #f9a8d4 0%, #db2777 45%, #831843 100%); }
+
+    /* ============ МОДАЛЬНЫЕ ОКНА ============ */
+    .info-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(1,2,14,0.88);
+      backdrop-filter: blur(45px);
+      -webkit-backdrop-filter: blur(45px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+
+    .info-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .info-card {
+      background: rgba(8, 16, 38, 0.9);
+      backdrop-filter: blur(55px);
+      -webkit-backdrop-filter: blur(55px);
+      border-radius: 2.2rem;
+      padding: 2.2rem;
+      max-width: 520px;
+      width: 92%;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: white;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+      transform: scale(0.88);
+      transition: transform 0.4s var(--transition-bounce);
+    }
+
+    .info-modal.active .info-card {
+      transform: scale(1);
+    }
+
+    .win-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,1,10,0.94);
+      backdrop-filter: blur(55px);
+      -webkit-backdrop-filter: blur(55px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s;
+    }
+
+    .win-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .win-content {
+      text-align: center;
+      color: white;
+      transform: translateY(40px);
+      transition: transform 0.6s var(--transition-bounce);
+    }
+
+    .win-overlay.visible .win-content {
+      transform: translateY(0);
+    }
+
+    /* ============ АДАПТИВНОСТЬ ============ */
+    @media (max-width: 1300px) {
+      .game-grid { grid-template-columns: repeat(6, 1fr); gap: 0.9rem; }
+      .sidebar-panel { width: 260px; }
+    }
+
+    @media (max-width: 1100px) {
+      .game-grid { grid-template-columns: repeat(4, 1fr); gap: 0.8rem; }
+      .sidebar-panel { width: 240px; padding: 1.5rem 1.2rem; }
+      .brand-logo { font-size: 1.5rem; }
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 0.4rem; align-items: flex-start; }
+      .app-shell { flex-direction: column; gap: 0.9rem; }
+      .sidebar-panel {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        padding: 1rem 1.2rem;
+        border-radius: 1.8rem;
+        position: sticky;
+        top: 0.4rem;
+        z-index: 50;
+      }
+      .brand-logo { font-size: 1.3rem; order: 1; }
+      .stats-row { order: 2; gap: 0.5rem; }
+      .stat-card { padding: 0.6rem 0.5rem; border-radius: 1rem; }
+      .stat-value { font-size: 1.2rem; }
+      .action-buttons { flex-direction: row; order: 3; width: 100%; gap: 0.5rem; }
+      .cosmic-btn { flex: 1; padding: 0.7rem; font-size: 0.75rem; border-radius: 1rem; }
+      .inventory-section { order: 4; width: 100%; }
+      .inv-badge { width: 38px; height: 38px; }
+      .game-grid { grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+      :root { --card-radius: 1.2rem; }
+      .card-wrapper:hover { transform: translateY(-4px); }
+    }
+
+    @media (max-width: 480px) {
+      .game-grid { grid-template-columns: repeat(3, 1fr); gap: 0.45rem; }
+      .sidebar-panel { padding: 0.7rem 0.9rem; border-radius: 1.4rem; }
+      .brand-logo { font-size: 1.1rem; }
+      .inv-badge { width: 32px; height: 32px; }
+      .info-card { padding: 1.5rem; border-radius: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ ФОНОВЫЕ ЭФФЕКТЫ ============ -->
+  <div class="cosmic-bg">
+    <div class="galactic-core"></div>
+    <div class="star-dust"></div>
+    <div class="constellation">
+      <svg viewBox="0 0 1000 800" preserveAspectRatio="none">
+        <line x1="120" y1="150" x2="280" y2="220" stroke="white" stroke-width="0.4" stroke-opacity="0.5"/>
+        <line x1="280" y1="220" x2="350" y2="380" stroke="white" stroke-width="0.3" stroke-opacity="0.4"/>
+        <line x1="350" y1="380" x2="220" y2="450" stroke="white" stroke-width="0.35" stroke-opacity="0.45"/>
+        <line x1="220" y1="450" x2="120" y2="150" stroke="white" stroke-width="0.3" stroke-opacity="0.4"/>
+        <line x1="650" y1="100" x2="780" y2="200" stroke="white" stroke-width="0.35" stroke-opacity="0.5"/>
+        <line x1="780" y1="200" x2="850" y2="350" stroke="white" stroke-width="0.3" stroke-opacity="0.4"/>
+        <line x1="850" y1="350" x2="720" y2="420" stroke="white" stroke-width="0.35" stroke-opacity="0.45"/>
+        <line x1="720" y1="420" x2="650" y2="100" stroke="white" stroke-width="0.3" stroke-opacity="0.4"/>
+        <circle cx="120" cy="150" r="1.5" fill="white" opacity="0.7"/>
+        <circle cx="280" cy="220" r="1.2" fill="white" opacity="0.6"/>
+        <circle cx="350" cy="380" r="1.8" fill="white" opacity="0.7"/>
+        <circle cx="220" cy="450" r="1.3" fill="white" opacity="0.5"/>
+        <circle cx="650" cy="100" r="1.4" fill="white" opacity="0.6"/>
+        <circle cx="780" cy="200" r="1.6" fill="white" opacity="0.7"/>
+        <circle cx="850" cy="350" r="1.2" fill="white" opacity="0.5"/>
+        <circle cx="720" cy="420" r="1.5" fill="white" opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="shooting-stars-container">
+      <div class="shooting-star"></div><div class="shooting-star"></div><div class="shooting-star"></div>
+      <div class="shooting-star"></div><div class="shooting-star"></div>
+    </div>
+    <div class="floating-dust" id="floating-dust"></div>
+  </div>
+
+  <!-- ============ ЗАГРУЗОЧНЫЙ ЭКРАН ============ -->
+  <div id="loading-screen">
+    <div class="loader-container">
+      <div class="loader-orbit-system">
+        <div class="loader-sun"></div>
+        <div class="loader-orbit orbit-1"><div class="loader-planet-dot"></div></div>
+        <div class="loader-orbit orbit-2"><div class="loader-planet-dot"></div></div>
+        <div class="loader-orbit orbit-3"><div class="loader-planet-dot"></div></div>
+      </div>
+    </div>
+    <div class="loading-text-block">
+      <div class="loading-status-line" id="loading-status">Система загружается...</div>
+      <div class="loading-authors-line">
+        <span id="authors-loader-text"></span><span class="typing-cursor"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ОСНОВНОЙ ИНТЕРФЕЙС ============ -->
+  <div class="app-shell">
+    <aside class="sidebar-panel">
+      <div class="brand-logo">✦ NEBULA</div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="moves">0</div>
+          <div class="stat-label">Ходов</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="timer">00:00</div>
+          <div class="stat-label">Время</div>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="cosmic-btn btn-hint-glow" id="hint-btn">
+          <i class="fas fa-sun"></i> Подсказка <span id="hints-count">(2)</span>
+        </button>
+        <button class="cosmic-btn" onclick="restartGame()">
+          <i class="fas fa-rocket"></i> Перезапуск
+        </button>
+      </div>
+      <div class="inventory-section">
+        <div class="inventory-title">Собранные миры</div>
+        <div class="inventory-grid" id="inventory"></div>
+      </div>
+    </aside>
+
+    <main class="game-grid" id="grid"></main>
+  </div>
+
+  <!-- ============ ИНФО-ОКНО ============ -->
+  <div class="info-modal" id="info-modal">
+    <div class="info-card">
+      <button onclick="closeInfo()" style="float:right;background:none;border:none;color:white;font-size:2rem;cursor:pointer;line-height:1;opacity:0.7;">&times;</button>
+      <h3 id="info-title" style="font-family:'Orbitron'; margin-bottom:1.2rem; font-size:1.4rem;"></h3>
+      <p id="info-desc" style="color:#bcc8e0; line-height:1.75; font-weight:400;"></p>
+    </div>
+  </div>
+
+  <!-- ============ ЭКРАН ПОБЕДЫ ============ -->
+  <div class="win-overlay" id="win-screen">
+    <div class="win-content">
+      <h2 style="font-family:'Orbitron'; font-size:2.2rem; margin-bottom:1rem; letter-spacing:2px;">ГАЛАКТИКА ОТКРЫТА</h2>
+      <p style="font-size:3.8rem; margin-bottom:1rem;" id="win-stars">★★★</p>
+      <p style="color:#8ba0d4; margin-bottom:0.5rem;">Ходов: <span id="final-moves" style="color:white;">0</span></p>
+      <p style="color:#8ba0d4; margin-bottom:2.5rem;">Время: <span id="final-time" style="color:white;">00:00</span></p>
+      <button class="cosmic-btn" onclick="restartGame()" style="margin:0 auto; min-width:220px;">
+        <i class="fas fa-globe"></i> Новое исследование
+      </button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ⚠️ МЕСТА ДЛЯ URL КАРТИНОК ПЛАНЕТ (замените пустые строки на ссылки)
+      const spaceData = [
+        { id: 'sun', name: 'Солнце', type: 'Звезда', desc: 'Центр нашей системы. Температура ядра — 15 миллионов градусов. Каждую секунду превращает 600 млн тонн водорода в гелий.', imgUrl: '', planetClass: 'planet-sun' },
+        { id: 'mercury', name: 'Меркурий', type: 'Планета', desc: 'Ближайшая к Солнцу планета. Перепады температур: от +430°C днём до -180°C ночью.', imgUrl: '', planetClass: 'planet-mercury' },
+        { id: 'venus', name: 'Венера', type: 'Планета', desc: 'Самая горячая планета. Атмосфера из углекислого газа создаёт сильнейший парниковый эффект.', imgUrl: '', planetClass: 'planet-venus' },
+        { id: 'earth', name: 'Земля', type: 'Планета', desc: 'Наш дом. 71% поверхности покрыто водой. Единственная известная планета, на которой есть жизнь.', imgUrl: '', planetClass: 'planet-earth' },
+        { id: 'mars', name: 'Марс', type: 'Планета', desc: 'Красная планета. Здесь находится Олимп — высочайший вулкан в Солнечной системе (выше Эвереста в 2.5 раза).', imgUrl: '', planetClass: 'planet-mars' },
+        { id: 'jupiter', name: 'Юпитер', type: 'Газовый гигант', desc: 'Крупнейшая планета. Большое Красное Пятно — гигантский шторм, который бушует уже более 350 лет.', imgUrl: '', planetClass: 'planet-jupiter' },
+        { id: 'saturn', name: 'Сатурн', type: 'Газовый гигант', desc: 'Великолепная система колец из миллиардов частичек льда и пыли. Плотность меньше плотности воды.', imgUrl: '', planetClass: 'planet-saturn' },
+        { id: 'uranus', name: 'Уран', type: 'Ледяной гигант', desc: 'Вращается «лёжа на боку» — ось наклонена почти на 98 градусов из-за древнего столкновения.', imgUrl: '', planetClass: 'planet-uranus' },
+        { id: 'neptune', name: 'Нептун', type: 'Ледяной гигант', desc: 'Самая ветреная планета. Скорость ветра здесь достигает 2100 км/ч.', imgUrl: '', planetClass: 'planet-neptune' },
+        { id: 'moon', name: 'Луна', type: 'Спутник', desc: 'Единственный спутник Земли. Всегда повёрнута к нам одной стороной из-за приливного захвата.', imgUrl: '', planetClass: 'planet-moon' },
+        { id: 'galaxy', name: 'Млечный Путь', type: 'Галактика', desc: 'Наша галактика. Содержит от 100 до 400 миллиардов звёзд. В центре — сверхмассивная чёрная дыра.', imgUrl: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgYGBgYGBgWGBYYFhgYFxgeFxoaHSggGBslHhoYITEiJSkrLi4uGB8zODMtNygtLisBCgoKDg0OGBAQGi0lHx8tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAK0BJAMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAACAwEEBQAGB//EADQQAAEDAgQEBQQCAgIDAQAAAAEAAhEhMQMSQVEEYXHwBYGRobETIsHR4fEyQgYUI1JyFf/EABkBAAMBAQEAAAAAAAAAAAAAAAABAgMEBf/EACIRAAICAgIDAQEBAQAAAAAAAAABAhEDEiExBEFRExRhcf/aAAwDAQACEQMRAD8A+LFHhiTH4m1YEAmTHvWkqMu9NP3OykDp039o9VrQg25cpoc00M0iLFsXJ1mKGhpAuPpouClhAuAaEa0Ohpt6J0FnR0H8D2lQQiqe/Mriw/HKhEg9CCCihWDCJ1+/0jEVoP0iLOfdE6FYLAJrUTUXkaxBE+oQAJuVT9OeqqhWKhS1qMNRNamokuQstU5eSblRMb+Robjbv2VahbEfTKkM17pH7TQNlI78k9RWJyLgxWMltZE0/q9EYwiAHEEZqtdBAMGDlMVgiKWIT1FZWLdhoPwPc/KIsAt3OwMSdPXknZKf3PJTkqUaBZXyd3U5aWVgYfK9v4XfT+J/X49UaBsVsiIN9xWNK2O9gfRPOHEgyNx0UhiNAsrZVLWCap+RdkRoFldrddlZ4bg2uZiOditY5gBawh04hJAhpAgQDNdlP0qd9PJDkojQLENb/daR0QuaNtB8Cfef4Vt+GKQSaCaa6whGGjQLKxZ3vopyNgXmbRcRve+nNWHYexQuZyS0HsIxmGTIG9Iip0ikdEvIrZZQee2tO5Q/S9vLYU3S0HsVfpqBhXOg96gdzsVbxRJmnkAB7JWRS4jsrFq5PIGw9/wVKmh2VQdj3yRAem/Pseyk6a/PTmuCCrIARkTJ87fOygJh6dwKGOnumkSAOXdkbRWlNRuPMAV5wFJCJqaiDYOREmNwje23OPwpayitRIbFgImiDO3Uf0jaxFiEkkmpJJJmZ/arUViww7cvMbqAE0177lEcOCqoVjuG43Ew2YrGOhuMA3EEA5g12YVPOtFWy8o/ablv+Odkbq1tOgsOl9E1EHJiMiIj2TQ1GGiFWpFiWgd9+6JrPz8dU5rOXfx/S4NT1CxWVSMNODEZwzAOlQOcQT8hPUViWsEG80i0RWZ5291H002FJCNQsUWUCLF+4kwBJmAIAnYaDkjAUhGoWKZhmdu4NlBwoMap4jUT3qoARqFii2nc0tf8bKBhJ2RcnoGwk4SjKnELj336I0DYVk9u6es+qH6c9+SdCmO9ktA2Kxw4XZaGlfhWA2UJCTgPYrDCJoK+/ogLaen5/fwrbggc3SFLgPYpOYuVpwXKNSrRlI/p9+cV2RMGyloWNGtggTdEAja2f68rBFCtRJbBAUtamkch79x7qQ1UkSQMOkx059K6fnouGyOKKQxWkKwY1RQETWow1Uok2A1ntz+N/JFk9EyJ/WykCs/oK1EhyB+nBgiCDBBpHIhc1qPKmhhOnY91WpLmJY1EBRHkUtaqojcABEBfv0TuHxXMcHNJa4WI0kb+yU1iKDYknvn+f5XZUQAUkeiKFsBlXBtUwYJgmDEgTBiTJAncgH0KluGdkUOwTrPfl3ohLFYZgE+u2/umnhDpWg0Vai2ZQDUzKOvf7VscIdk3C4Fx0502Ak/lFFLkpNGy7Irw4MoxwZ2SHTMlzEpy18bhIgEGZM7RSPOZnyVTF4VIHwUWqQ9WBw/L25oXYM+9dbanlHygLQAqUeLg7DWFzOFdoofikUNU/QX8FQuewd1TcwBr3rdRmaUqCyq5q5OeK2XJahsZICJrR2VwTGhciR0nQO9e/wBKWhcAmQqSFZAZ31siARtYmALRRJchYajYz5TANTr5Lg1WokOQLWrsqZCIDl2O/ZWkZSmQxg8kzDBaQREg6gOHmCCD0KJjR7J2FgyVaiYymV24aINXoOE/4897ZaJ91T4rw1zJDhEfmqFXQmp90Z2VQBvtTltoaclb/wCtoRVWB4a7KHwcpJE6EiCQNoBCG0ioQlIzQybqRgX72WwPDxsSBqaUtMTedAdCrODwYNz51raizc0jojgkzFweCcdFcb4UTFF6XhOBDYkAa1ImzTEeY2uVf4XDa0ah03IIF6EbNuVDyo3XjUuTzGD4PuJ8vX8K0zwU6DcxrF1uwbgTMEE0gUEGk2AjouYGiWZ5ANAMxBIoCBQjz3U/tRt/KjHweAbWBbTX2lWMbw45wBhmXVaIqBcXuOq1C+JyjKDTQnQ00Av6pTGyQTSdyQRzOUGfnZR/QVHxIrtFF3hf25g3MKyK5qSaAGv6k6Shw+Fgj/xSN7Wibzrr/Svl8VJglu4tJ10uUscSCQAfzSbAftL97NP51XQTvDW/+hDom9ZvXY8r0VV/DgSSzaItUi4itPn1vYvG3k0/+TcGO+qFvFh1L6CuUaHUHQlL9SXgZlcVwucH6eHJGrZoK+VgTMbKi/g3QRLZFcpIJNgIBqY9pW59YtENNTfWZrpFOqRjcKHAugQDUkVAsBSk1utIzMp4/wDDAxMD7ZMAgNiQ6XyfurYEe/W+c/BMEwSBE6gB1BJ02qvQeK45c2IMATQHLOUfcTpOQUHOAs7EbeupsWmYJAIgxBlWv+mE1XoxXONTG1qaba97pLrEb6rQxmeRroJtpUa67LJxJbfmnf0xSvog4JJgW5/mE7E4F7RPxaF3CY8X7mivcPxwgjEZM7D0kLSEYvsmc5r0ZBxyuV3Hw8HMakDnErlDTNE00ZHl338q7x/BvwywvwwwYmG3EYAcwLHUDv8AIkSQTB9AIVVp72rPfVMazksVE1s5otHfRGAibh/aTIuBFZMg1FIgRF9R5GNO+i0SIsEBMAQhMY1WkRKRJHeqlNZhynM4VaKDMJZEU4laHDeHYjmPe1pLGRmcAYE2B6lE3gbVWlw7HNaWZjlMSAYBOk7q9DPazHA02p7q7wmFFSrRawaGYPOycw5SKG8yJMgEk9xpZRKVGuPFb5PoX/BfEsNjC14E7rL/AOU8KzExHOaAJ915/hcZzaNB51mupMXHe6v4fEQZfUAaGskGPQwY5RSVxtJSckehWy1M9nBttE3rQVgx5THoUeDwFDWYFLZQanX/ACtER/tyhCHDmT89VYwg90QBJjnXSN9ewpnlNMeHnoQOEINYGwBlwqYJjUbGDbqtHBY1p+3MPm0ETQwZNNipwOGJgE84tU0p7Lb4Lw7lC4p+Ryd0caSKuBg5ogO3qaTbXoFdPCOIqaX0Wpw/AQnYmAAsHmbHqjzmLwQislKOBFQKD0BifKx9CtTisSD/AIu9JEyFQwMV+awy1k0kHpXlrvySWYvR0UcfFf8A6AG1azWttfNIbjOH+ZkikR10K3nAQaCflZnGxQ6nTbVUpsOPhTDmuP26a0ibia381V4jiAHlgIkVNZveoHVO4vDYMQPaHAbkgk0tNJKzcp+q4uEBwJrem+tTTbeFtBtinqjQ+oI7quLiNTJpc1rPnUDzAVY4wBiNOcikyI7gpDMWDFusACetgtKMtkXBxFCXTFZJisEGGxQmKwd+iTg8e95yBtCaC8uFBA1/UoXkuoDAmA4XGYiJgVrG8VXY3HDCnCc1plsS6QCZyy4zEDdb44yrk5suWN0lyDwOE84+I0utIiKQKggVBOutVV457GTERS1xAFdBX+KIcLxINYSKOGszM0gVt+YGywuO8SaXfaDFDWptegA3W6ajwcklKTH8Zi1HXamlPhZPEvb1R4+IXEZZymkxExuJpQinRG3BhtbmIoJ1/BhFt9EUo9srZJLSZABrpZNbiy4fcYE39u+SWMFxMAiAev8AauOwGtA5jRaRTMpSVULxOJZNWknyXKfok6H0Uq6kZ7QMtoTw2/ewtpohw8Pf+O7pmWihRNnIgIgFGE2VcwcEUkSK6xp2fJWo2RPIkKw8NWmYFkeDhzS62OH4LdpsfXQLWMaOaU7F+FeGZqmIE3om8UxuFLnEGtOp0Cazjm4JLXtNzBtNP3qqYwjjv+o8fb/qLAD89Up5K4Rri8fZ7S6LGCQ+Mrep/W6vYPh5cTmOUaDz9lZwMuGwW2pTqrbnsLc1hHcarnlmZ2RwccGdi+Htb9xaKUFIFKedkh4LWiRAJnQUsSJNdvLkrPimK4gBkAmBJ50sVPB8AC0TeP8AYzsaUoDdck8zukdmPx+LZV4YjSP8ibTGkk3/APX1T8Qzf0P+xrbLUC3urjuHAuNZnfzVlnCh0HW4PULF5HR0LGrszuF4RxuABJNOZ71Wjw+GatEkwKwImYAv1V3heCdJnyV3A4IzJMRt+Vy5Jto2ikmP8O8PA0r+lvcLwwVPhAdlo4WIAuegkyz/ANeAqXEBNxuOC89xfj7A/LInQC5Q6FGMmK43iIo4GuoEjz2WbjcTkqXCOd40F+noqvHeJ55LWunTMaNpApOp05qtwXBtNXuBrShIApyp5Am6cU30bUkuTQPiZfGRsjU2FqdafCXiOGsV7tKr8VjxGUEaX6CwCpY3EvjMJAkRIqDWJ2pO9iumMPpk38LnEsYR90RGu+kbrIxuKBJykXvMDyEfAUubnYTJuATWNZ6H/H7az5LO4wMY0N+ymVwcAcxEH7RE0Jn/AC1DZgLdRZm2ixhOJMG2+m38x1TMPCw6ZjMyIE1itG3NJlZHGcUZLi0hjTlqJhwAAkiAHXIBq0AXgTm4/FzBAnYihPUzyWseDlm7fdHosH/kOR5awMJgZa0aRDRJJ1rNY6LF8T8Ve/EIbE1AEzE8xQzsCRpWqzS1+IS4kyTJJqTNyZvqrOHwuW7p2nRaRU5GMpY4ddijivJEgigvNQRMibCCI01FCuZw1yQBbWVc+vAhrUnCwXOJ0HdlvHHz9Oeea030HAgBg6kqHNcQSY2/pWcsNAF0OHhaFdCgcbyN8iG4YCY8yeSlwre5Pl3+EtJ8Dir5ZabxLWiAB81XLNe6q5GzH+SA+n6KWsmwnopc30VnAf8AbAPpcytFHmjNy9jMLhgBQhx1IrEjql4sTryohx8QNA0JBIIIkQY+6Ki1qXBVJmOC6SfkIbS4QqlJ2bWA/wBINbFafCcW3Lkc0iYF6GBUzusTheNYLm3I9haWDxzREtMOkBxBh0Xy71Rsvo4wa9G9OC+PrPzEtgAwMtwPcixqsviMT6JAaJp9ooZrADhvNaJmH4rhgTl0iDS3WpUv8QZiEfZS5GWZ0iSepWUkn7OzDJp9ENx3vDXOaGjqdyJsPVW8HBBvWsxJO2sCZr6ra4PxPDe0MyF9xJaGlusAuifdVxwrQ7PkhsUzODYpaWzOt/648kKO/FlviqEnhWiIEkChOk6D1XM4N15gbC+k8jQ+yYeNbE/aYiSHUEzcxYwYvMLuG8Vw5+45aVFj5Eiu9NAbLmnGzpjOhv0HkVGbfcknSsCiucK8sgFhqaVsJid4HTRVh4vhUh7B5iukxJuhxPH8Ef7gxWgj03WbgWshd/8A3cOT9hpQkAyDSnuPVO4bx4utgYu1QBPqQszA8cw8Qw1szSSQ1s7VptSnSqdi+O4bHtaYmYABsQdxosnjkVsvhu4PiOK7/HDA2JM1tUUj1VfisfiARWAdAZg9SJPsOSwuJ/5hko3CMwJALTANajoZiVRxPHeJxa5cjL0H3GgpyqYUvC+hxlT6Rt4+d5OZzjI8toprZLwuGDcx3FezJjRYPE8VimGlxmBmtDQItzsJ390Y+Z2TO7/GYaD9MkVFTFYiNbJxwFSy/wCm1xXH4YoSGnrXf1vRV+IxzldDxLDDgaAEXBF+tLwsfjGQZ+1rTTQ4jaGQCRFZNaGgG4VR/FMaRP3sDm/4ky7fKXNgGaW8iumOOvRyyy30y6OLxKyaV/xIoKEXoQSREbGbULDxmBtXVr9sXip++Z5QPXdJjKJ2qDvsNoj3N1n8ViwSQ08pNY0suuOJrmjlflxvgs4rrmglwJGUQP8AKp1kSLAyDyCo8Sz7hIkDrWDH791LsRxqZ6JRJikz7LRYvpjLyWVcbAFT0HSmsXT+DYJqJEb0BI5RUdyjOHIHWfNWRAC1jiRyzzsq4j9GxKA4B1+NVcOvIJROqtQRm8kvR2GxOGJEpGZCe/NV0Zu32EcSEl7tdVBclOciy4xCc5DiP11+OiDN+vz+Ep7lDZoohZlyruK5Z2WXQ2QhLwLUOnVThA30mJ0TGYYNwuq/hx9FbKZgySDaDKNmGCdKK79H4ApS39KMZhIAzQO/49EtX2L9ELw3wmHizoKbi6qOZBIFR0U47y4uLpkkk0gSTJoKDyUM1j2Obx7tALEQYNT+RoeifgeIOtLo5Cv8Kg0lthzTPqOFzHKlFnRssno2OH40/wCrcUjm6BsdfZW8Ljw0O/8AAJIP3kiZjWZkaefJed/7hAEOIRt4l7qGSDy+YUOFm0c1dm1jeIYksIJLQLOiBWTkIq0GB7pTeOdcuG7s7Qc0g8tOiy3ZTAcfK0fA9V2cRRsidSo/Et+TfJoYPijWifsMyYy1ibur0FRFFYZ4m4iMrckRGWIbeBlpHLrusFj50jatN/0rDsUxdUsJEvKro3BxTXSDSgGm28IzxWGBAgEisCaSCRUcr0vdYOGJpadfi6snDAoSbW67oWBCflf6aR8XgZcNrRE1gF2lTHMDVV3+JOzGomDlEQRN+tfRUfpi80olfTaHEzU7c/wj8Q/pNt3iMNgNIO/8JWLX/YinWdpWc17Rv+lBxpPJWsSM5eRL0WZE1k6gGs7qtjPAdQU05IsNrnTlBJgmgJgCpNNklyv816Mf2k+xx4l2iGSb1AS8y4mCR5Gv6uqom+RzTO1ibgW668lJdPkq2ZcHpj5Y6VwfRKzU773UOeEWCiPbiCOe86eQmecoDiJBffy7PsgL0rGosf8AUqlvekZkL393vbzS2LUBpchc/dILlDnKHItIJxQF6gvQ81DZSiCSpQF65TZdF7DfFJpeJpKstxAs9jlf8OwmPdGJifTbDjmyl1QCQIFamByldKkcTiOfjyZADeQmB0kk+6A426rQZTPpyr2ZOkfYbcQaIcTDnee/4UFsWUaGT7de9Um/o1GuhLsJxtOnfyntwREkyb1SyUIJU8F8sbiPbapHc+6b/wBt5AAiBJAprA/AVUDvqpTTE4IYJmZIMzM1XNYJmFEd7LplLgOR2YRau6lpSgmRBjYxcdnyVGbQ0YiHOUrMolAakly4vvuoEf33KElItIYKlNY0wToLnraUoiNQaAyJ1Exa4semoQuKAoaMUioMXFDFxVBmQZ0JelZWo7PzQFyVKglKytQy5dmQFylomYBMCTeg1NLAU9QlY6CDrfmxUOclnEpbz77ogJSspIYDroLnQSozTt3RLmhr/KAOUtlUMzQQfMXH53UEzqYG+3T1oga8iYJEiDzG3RCXJWMMlAShzIXOUtlJBFyEOIMjQivPRC86CtrSlu3UNlUE5/RclT3RcpsdFpmKnYTlSY9Pa9bqZi4F3DcnNcqLMSicHx5HbubLRSMXAsEoZVf6ik4iewKA2UTYrX+apIIivlzv+o8xzUhyNitRkqAgzpmK5s/bmiP9om1bGvfmrHRIO3kuJSi9cHp7C1LFN/0EGZKOJ3OncKM6NhaDiVzXx6EetEkOlcHpbBoOB79f6USkZ1LnjSYgfFfeUbD1HyuDhrb1hJLu9gbdVGZFjURmaPf37lDmQnQ5gZmlZEHWkV5FBm5KbKoZmUOclB3fwpBJoiwoMFDmS86IH3p+fKyWxVBtEoC63euvP9IC5RKlyChn1Lita0PzuhPXvmlvKEuU7FKIxxQucn8F4g/BcXMyyWuaZa14h7YNCIBg+RVSTWsTSNSDX0slsVqEe/dA5D9SkaXQlQ5FahixPc7HagcecJd1zt/dAOX7UtjoJ7iSSak3JvOq5ACNz6T+VKVj1Cw8SBQ1Mg7xEba1sayja9Vhp3qjD++SakJxLbcTv0RfUSHP969Lhc16tSIcSwcRcHd/wksK4OKewtS1nXFyrB0X72U5k9halsEQDOpBHIAEH3PoozquTCK08jHz+k9g1G51IxKen8quHrsyNg1H5+X9c/bu0B6UMShECpBmKiARAOgM1GsDZRKNg1H/AFOalpv37a6JGddmRsLUfn37K4vScygnbvdGw6HkwOokUuPzWfRcX8/L+hCQcSbyfPzUFyNg1HZlDnzqlShc5LYNRsrsyQHrpS2HqPOIoZiVSC5RmScikhzTWPWoQ5kvNohlLYdDsN3d9EOalkmVBKnYqhuZQSO/JLldnP48q/s+qVjoIvmpk+f5UE9UWMIDdZE8x9zhHSk+aQX7qWxpDc0C0mDeaDlz/wAuXygaZMb0iYvaptVLJUv/AAD6iVLkOiCVyErkrHR//9k=', planetClass: 'planet-galaxy' },
+        { id: 'nebula', name: 'Туманность Ориона', type: 'Туманность', desc: 'Активные «звёздные ясли». Прямо сейчас здесь из газа и пыли рождаются сотни новых звёзд.', imgUrl: '', planetClass: 'planet-nebula' }
+      ];
+
+      let state = { cards: [], flipped: [], matched: 0, moves: 0, timer: 0, interval: null, hintsLeft: 2, locked: false, gameStarted: false };
+
+      // Парящая пыль
+      function spawnDust() {
+        const container = document.getElementById('floating-dust');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = 0; i < 35; i++) {
+          const mote = document.createElement('div');
+          mote.className = 'dust-mote';
+          const size = Math.random() * 3.5 + 1.2;
+          mote.style.width = size + 'px';
+          mote.style.height = size + 'px';
+          mote.style.left = Math.random() * 100 + '%';
+          mote.style.animationDuration = (Math.random() * 10 + 8) + 's';
+          mote.style.animationDelay = Math.random() * 10 + 's';
+          mote.style.opacity = Math.random() * 0.5 + 0.25;
+          container.appendChild(mote);
+        }
+      }
+
+      function fmtTime(s) {
+        const m = Math.floor(s / 60), sec = s % 60;
+        return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+      }
+
+      function startClock() {
+        if (state.interval) clearInterval(state.interval);
+        state.interval = setInterval(() => {
+          state.timer++;
+          document.getElementById('timer').textContent = fmtTime(state.timer);
+        }, 1000);
+      }
+
+      function flipCard(el) {
+        if (state.locked || el.classList.contains('flipped') || el.classList.contains('matched')) return;
+        if (!state.gameStarted) { state.gameStarted = true; startClock(); }
+        el.classList.add('flipped');
+        state.flipped.push(el);
+        if (state.flipped.length === 2) {
+          state.moves++;
+          document.getElementById('moves').textContent = state.moves;
+          state.locked = true;
+          checkMatch();
+        }
+      }
+
+      function checkMatch() {
+        const [a, b] = state.flipped;
+        if (a.dataset.id === b.dataset.id) {
+          a.classList.add('matched'); b.classList.add('matched');
+          state.matched++;
+          addInventory(a.dataset.id);
+          state.flipped = []; state.locked = false;
+          if (state.matched === spaceData.length) victory();
+        } else {
+          setTimeout(() => {
+            a.classList.remove('flipped'); b.classList.remove('flipped');
+            state.flipped = []; state.locked = false;
+          }, 850);
+        }
+      }
+
+      function addInventory(id) {
+        if (document.querySelector(`.inv-badge[data-id="${id}"]`)) return;
+        const data = spaceData.find(d => d.id === id);
+        const badge = document.createElement('div');
+        badge.className = 'inv-badge pop-anim';
+        badge.dataset.id = id;
+        if (data.imgUrl && data.imgUrl.trim() !== '') badge.style.backgroundImage = `url(${data.imgUrl})`;
+        else badge.classList.add(data.planetClass);
+        badge.onclick = () => showInfo(id);
+        document.getElementById('inventory').appendChild(badge);
+        setTimeout(() => badge.classList.remove('pop-anim'), 600);
+      }
+
+      function showInfo(id) {
+        const d = spaceData.find(x => x.id === id);
+        document.getElementById('info-title').textContent = d.name;
+        document.getElementById('info-desc').textContent = d.desc;
+        document.getElementById('info-modal').classList.add('active');
+      }
+
+      window.closeInfo = () => document.getElementById('info-modal').classList.remove('active');
+
+      function victory() {
+        clearInterval(state.interval);
+        document.getElementById('final-moves').textContent = state.moves;
+        document.getElementById('final-time').textContent = fmtTime(state.timer);
+        document.getElementById('win-screen').classList.add('visible');
+      }
+
+      function restartGame() {
+        clearInterval(state.interval);
+        state = { cards: [], flipped: [], matched: 0, moves: 0, timer: 0, interval: null, hintsLeft: 2, locked: false, gameStarted: false };
+        document.getElementById('moves').textContent = '0';
+        document.getElementById('timer').textContent = '00:00';
+        document.getElementById('hints-count').textContent = '(2)';
+        document.getElementById('win-screen').classList.remove('visible');
+        document.getElementById('inventory').innerHTML = '';
+        buildBoard();
+      }
+
+      function buildBoard() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        const deck = [...spaceData, ...spaceData].sort(() => Math.random() - 0.5);
+        deck.forEach(item => {
+          const wrap = document.createElement('div');
+          wrap.className = 'card-wrapper';
+          const glow = document.createElement('div');
+          glow.className = 'card-glow';
+          const inner = document.createElement('div');
+          inner.className = 'card-inner';
+          inner.dataset.id = item.id;
+          let frontBg = '';
+          if (item.imgUrl && item.imgUrl.trim() !== '') frontBg = `background-image:url('${item.imgUrl}');background-size:cover;`;
+          inner.innerHTML = `
+            <div class="card-face card-front ${(!item.imgUrl||item.imgUrl.trim()==='')?item.planetClass:''}" style="${frontBg}"></div>
+            <div class="card-face card-back"></div>
+          `;
+          wrap.appendChild(glow);
+          wrap.appendChild(inner);
+          wrap.addEventListener('click', () => flipCard(inner));
+          grid.appendChild(wrap);
+          state.cards.push(inner);
+        });
+      }
+
+      document.getElementById('hint-btn').addEventListener('click', () => {
+        if (state.locked || state.hintsLeft <= 0) return;
+        if (!state.gameStarted) { state.gameStarted = true; startClock(); }
+        state.hintsLeft--;
+        document.getElementById('hints-count').textContent = `(${state.hintsLeft})`;
+        state.locked = true;
+        const hidden = state.cards.filter(c => !c.classList.contains('matched') && !c.classList.contains('flipped'));
+        hidden.forEach(c => c.classList.add('flipped'));
+        setTimeout(() => {
+          hidden.forEach(c => c.classList.remove('flipped'));
+          state.locked = false;
+        }, 1500);
+      });
+
+      window.restartGame = restartGame;
+      spawnDust();
+      buildBoard();
+
+      window.addEventListener('load', () => {
+        const txt = "Авторы: Голосов Даниил Алексеевич | Баринова София Владимировна";
+        const el = document.getElementById('authors-loader-text');
+        let i = 0;
+        function type() {
+          if (i < txt.length) { el.textContent += txt.charAt(i); i++; setTimeout(type, 40); }
+          else {
+            document.getElementById('loading-status').textContent = "Доступ разрешён. Добро пожаловать.";
+            setTimeout(() => {
+              document.getElementById('loading-screen').classList.add('orbit-lock');
+              setTimeout(() => {
+                document.getElementById('loading-screen').style.opacity = '0';
+                setTimeout(() => { document.getElementById('loading-screen').style.display = 'none'; }, 1200);
+              }, 1800);
+            }, 900);
+          }
+        }
+        setTimeout(type, 700);
+      });
+
+      document.getElementById('info-modal').addEventListener('click', function(e) { if (e.target === this) closeInfo(); });
+    })();
+  </script>
+</body>
+</html>
