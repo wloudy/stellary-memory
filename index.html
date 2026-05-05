@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>COSMOS OS: NEBULA MEMORY </title>
+  <title>✦ COSMOS OS: NEBULA MEMORY ✦</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Orbitron:wght@400;600;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -386,6 +386,41 @@
       margin-top: 2px;
     }
 
+    /* Индикатор эффективности */
+    .efficiency-bar {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.03);
+      border-radius: 1rem;
+      padding: 0.8rem 1rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .efficiency-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #6b7fa8;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .efficiency-track {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .efficiency-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #22d3ee, #c084fc);
+      border-radius: 2px;
+      transition: width 0.8s var(--transition-smooth);
+      box-shadow: 0 0 12px rgba(34,211,238,0.5);
+    }
+
     .action-buttons {
       display: flex;
       flex-direction: column;
@@ -693,10 +728,66 @@
       color: white;
       transform: translateY(40px);
       transition: transform 0.6s var(--transition-bounce);
+      max-width: 500px;
+      width: 90%;
     }
 
     .win-overlay.visible .win-content {
       transform: translateY(0);
+    }
+
+    .rating-container {
+      margin: 1.5rem 0;
+    }
+
+    .stars-display {
+      font-size: 3.5rem;
+      letter-spacing: 0.5rem;
+      margin-bottom: 0.8rem;
+      animation: starReveal 1s ease-out;
+    }
+
+    @keyframes starReveal {
+      0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+      60% { transform: scale(1.3) rotate(10deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .rank-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 3px;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+    }
+
+    .score-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .score-item {
+      background: rgba(255,255,255,0.03);
+      border-radius: 1rem;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .score-item-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #6b7fa8;
+      margin-bottom: 0.3rem;
+    }
+
+    .score-item-value {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.2rem;
+      color: #f0f4ff;
     }
 
     /* ============ АДАПТИВНОСТЬ ============ */
@@ -731,7 +822,8 @@
       .stat-value { font-size: 1.2rem; }
       .action-buttons { flex-direction: row; order: 3; width: 100%; gap: 0.5rem; }
       .cosmic-btn { flex: 1; padding: 0.7rem; font-size: 0.75rem; border-radius: 1rem; }
-      .inventory-section { order: 4; width: 100%; }
+      .efficiency-bar { order: 4; width: 100%; }
+      .inventory-section { order: 5; width: 100%; }
       .inv-badge { width: 38px; height: 38px; }
       .game-grid { grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
       :root { --card-radius: 1.2rem; }
@@ -744,6 +836,7 @@
       .brand-logo { font-size: 1.1rem; }
       .inv-badge { width: 32px; height: 32px; }
       .info-card { padding: 1.5rem; border-radius: 1.6rem; }
+      .score-details { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -812,6 +905,18 @@
           <div class="stat-label">Время</div>
         </div>
       </div>
+
+      <!-- Индикатор эффективности -->
+      <div class="efficiency-bar">
+        <div class="efficiency-label">
+          <span>Эффективность</span>
+          <span id="efficiency-percent" style="color:#22d3ee;">100%</span>
+        </div>
+        <div class="efficiency-track">
+          <div class="efficiency-fill" id="efficiency-fill" style="width: 100%;"></div>
+        </div>
+      </div>
+
       <div class="action-buttons">
         <button class="cosmic-btn btn-hint-glow" id="hint-btn">
           <i class="fas fa-sun"></i> Подсказка <span id="hints-count">(2)</span>
@@ -841,10 +946,33 @@
   <!-- ============ ЭКРАН ПОБЕДЫ ============ -->
   <div class="win-overlay" id="win-screen">
     <div class="win-content">
-      <h2 style="font-family:'Orbitron'; font-size:2.2rem; margin-bottom:1rem; letter-spacing:2px;">ГАЛАКТИКА ОТКРЫТА</h2>
-      <p style="font-size:3.8rem; margin-bottom:1rem;" id="win-stars">★★★</p>
-      <p style="color:#8ba0d4; margin-bottom:0.5rem;">Ходов: <span id="final-moves" style="color:white;">0</span></p>
-      <p style="color:#8ba0d4; margin-bottom:2.5rem;">Время: <span id="final-time" style="color:white;">00:00</span></p>
+      <h2 style="font-family:'Orbitron'; font-size:2rem; margin-bottom:0.5rem; letter-spacing:2px;">ГАЛАКТИКА ОТКРЫТА</h2>
+      <p style="color:#8ba0d4; margin-bottom:1.5rem;">Миссия завершена успешно</p>
+
+      <div class="rating-container">
+        <div class="stars-display" id="win-stars">★★★</div>
+        <div class="rank-title" id="rank-title"></div>
+      </div>
+
+      <div class="score-details">
+        <div class="score-item">
+          <div class="score-item-label">Ходов</div>
+          <div class="score-item-value" id="final-moves">0</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item-label">Время</div>
+          <div class="score-item-value" id="final-time">00:00</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item-label">Точность</div>
+          <div class="score-item-value" id="final-accuracy">100%</div>
+        </div>
+        <div class="score-item">
+          <div class="score-item-label">Рейтинг</div>
+          <div class="score-item-value" id="final-score">0</div>
+        </div>
+      </div>
+
       <button class="cosmic-btn" onclick="restartGame()" style="margin:0 auto; min-width:220px;">
         <i class="fas fa-globe"></i> Новое исследование
       </button>
@@ -855,20 +983,113 @@
     (function() {
       // ⚠️ МЕСТА ДЛЯ URL КАРТИНОК ПЛАНЕТ (замените пустые строки на ссылки)
       const spaceData = [
-        { id: 'sun', name: 'Солнце', type: 'Звезда', desc: 'Центр нашей системы. Температура ядра — 15 миллионов градусов. Каждую секунду превращает 600 млн тонн водорода в гелий.', imgUrl: 'https://media.istockphoto.com/id/1446526140/ru/%D1%84%D0%BE%D1%82%D0%BE/%D1%81%D0%BE%D0%BB%D0%BD%D1%86%D0%B5-%D0%B2-%D0%BA%D0%BE%D1%81%D0%BC%D0%BE%D1%81%D0%B5.jpg?s=612x612&w=0&k=20&c=6l8drjdecNEggWLeWOMuCbL0seBHTJ1-MS6WYfJPqjY=', planetClass: 'planet-sun' },
-        { id: 'mercury', name: 'Меркурий', type: 'Планета', desc: 'Ближайшая к Солнцу планета. Перепады температур: от +430°C днём до -180°C ночью.', imgUrl: 'https://avatars.mds.yandex.net/i?id=611cd81a4988840d161673f3aadee615_l-4469622-images-thumbs&n=13', planetClass: 'planet-mercury' },
-        { id: 'venus', name: 'Венера', type: 'Планета', desc: 'Самая горячая планета. Атмосфера из углекислого газа создаёт сильнейший парниковый эффект.', imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Venus_-_September_24_2017_%2850535048387%29.png', planetClass: 'planet-venus' },
-        { id: 'earth', name: 'Земля', type: 'Планета', desc: 'Наш дом. 71% поверхности покрыто водой. Единственная известная планета, на которой есть жизнь.', imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/22/Earth_DSCOVR_2023-05-05.jpg', planetClass: 'planet-earth' },
-        { id: 'mars', name: 'Марс', type: 'Планета', desc: 'Красная планета. Здесь находится Олимп — высочайший вулкан в Солнечной системе (выше Эвереста в 2.5 раза).', imgUrl: 'https://i.shgcdn.com/38659d4d-1e5b-4f83-a44d-1cf44723b6f1/-/format/auto/-/preview/3000x3000/-/quality/lighter/', planetClass: 'planet-mars' },
-        { id: 'jupiter', name: 'Юпитер', type: 'Газовый гигант', desc: 'Крупнейшая планета. Большое Красное Пятно — гигантский шторм, который бушует уже более 350 лет.', imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Jupiter_130115.JPG/250px-Jupiter_130115.JPG', planetClass: 'planet-jupiter' },
-        { id: 'saturn', name: 'Сатурн', type: 'Газовый гигант', desc: 'Великолепная система колец из миллиардов частичек льда и пыли. Плотность меньше плотности воды.', imgUrl: 'https://science.nasa.gov/wp-content/uploads/2024/03/hubble-saturn-visible-light.jpg?w=985', planetClass: 'planet-saturn' },
-        { id: 'uranus', name: 'Уран', type: 'Ледяной гигант', desc: 'Вращается «лёжа на боку» — ось наклонена почти на 98 градусов из-за древнего столкновения.', imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/bb/Uranus.jpg', planetClass: 'planet-uranus' },
-        { id: 'neptune', name: 'Нептун', type: 'Ледяной гигант', desc: 'Самая ветреная планета. Скорость ветра здесь достигает 2100 км/ч.', imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg', planetClass: 'planet-neptune' },
-        { id: 'moon', name: 'Луна', type: 'Спутник', desc: 'Единственный спутник Земли. Всегда повёрнута к нам одной стороной из-за приливного захвата.', imgUrl: 'https://avatars.mds.yandex.net/i?id=dc4e728b3c505c0e6eb9c5a59503793046139a68-8196710-images-thumbs&n=13', planetClass: 'planet-moon' },
-        { id: 'galaxy', name: 'Млечный Путь', type: 'Галактика', desc: 'Наша галактика. Содержит от 100 до 400 миллиардов звёзд. В центре — сверхмассивная чёрная дыра.', imgUrl: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBgYGBgYGBgWGBYYFhgYFxgeFxoaHSggGBslHhoYITEiJSkrLi4uGB8zODMtNygtLisBCgoKDg0OGBAQGi0lHx8tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAK0BJAMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAACAwEEBQAGB//EADQQAAEDAgQEBQQCAgIDAQAAAAEAAhEhMQMSQVEEYXHwBYGRobETIsHR4fEyQgYUI1JyFf/EABkBAAMBAQEAAAAAAAAAAAAAAAABAgMEBf/EACIRAAICAgIDAQEBAQAAAAAAAAABAhEDEiExBEFRExRhcf/aAAwDAQACEQMRAD8A+LFHhiTH4m1YEAmTHvWkqMu9NP3OykDp039o9VrQg25cpoc00M0iLFsXJ1mKGhpAuPpouClhAuAaEa0Ohpt6J0FnR0H8D2lQQiqe/Mriw/HKhEg9CCCihWDCJ1+/0jEVoP0iLOfdE6FYLAJrUTUXkaxBE+oQAJuVT9OeqqhWKhS1qMNRNamokuQstU5eSblRMb+Robjbv2VahbEfTKkM17pH7TQNlI78k9RWJyLgxWMltZE0/q9EYwiAHEEZqtdBAMGDlMVgiKWIT1FZWLdhoPwPc/KIsAt3OwMSdPXknZKf3PJTkqUaBZXyd3U5aWVgYfK9v4XfT+J/X49UaBsVsiIN9xWNK2O9gfRPOHEgyNx0UhiNAsrZVLWCap+RdkRoFldrddlZ4bg2uZiOditY5gBawh04hJAhpAgQDNdlP0qd9PJDkojQLENb/daR0QuaNtB8Cfef4Vt+GKQSaCaa6whGGjQLKxZ3vopyNgXmbRcRve+nNWHYexQuZyS0HsIxmGTIG9Iip0ikdEvIrZZQee2tO5Q/S9vLYU3S0HsVfpqBhXOg96gdzsVbxRJmnkAB7JWRS4jsrFq5PIGw9/wVKmh2VQdj3yRAem/Pseyk6a/PTmuCCrIARkTJ87fOygJh6dwKGOnumkSAOXdkbRWlNRuPMAV5wFJCJqaiDYOREmNwje23OPwpayitRIbFgImiDO3Uf0jaxFiEkkmpJJJmZ/arUViww7cvMbqAE0177lEcOCqoVjuG43Ew2YrGOhuMA3EEA5g12YVPOtFWy8o/ablv+Odkbq1tOgsOl9E1EHJiMiIj2TQ1GGiFWpFiWgd9+6JrPz8dU5rOXfx/S4NT1CxWVSMNODEZwzAOlQOcQT8hPUViWsEG80i0RWZ5291H002FJCNQsUWUCLF+4kwBJmAIAnYaDkjAUhGoWKZhmdu4NlBwoMap4jUT3qoARqFii2nc0tf8bKBhJ2RcnoGwk4SjKnELj336I0DYVk9u6es+qH6c9+SdCmO9ktA2Kxw4XZaGlfhWA2UJCTgPYrDCJoK+/ogLaen5/fwrbggc3SFLgPYpOYuVpwXKNSrRlI/p9+cV2RMGyloWNGtggTdEAja2f68rBFCtRJbBAUtamkch79x7qQ1UkSQMOkx059K6fnouGyOKKQxWkKwY1RQETWow1Uok2A1ntz+N/JFk9EyJ/WykCs/oK1EhyB+nBgiCDBBpHIhc1qPKmhhOnY91WpLmJY1EBRHkUtaqojcABEBfv0TuHxXMcHNJa4WI0kb+yU1iKDYknvn+f5XZUQAUkeiKFsBlXBtUwYJgmDEgTBiTJAncgH0KluGdkUOwTrPfl3ohLFYZgE+u2/umnhDpWg0Vai2ZQDUzKOvf7VscIdk3C4Fx0502Ak/lFFLkpNGy7Irw4MoxwZ2SHTMlzEpy18bhIgEGZM7RSPOZnyVTF4VIHwUWqQ9WBw/L25oXYM+9dbanlHygLQAqUeLg7DWFzOFdoofikUNU/QX8FQuewd1TcwBr3rdRmaUqCyq5q5OeK2XJahsZICJrR2VwTGhciR0nQO9e/wBKWhcAmQqSFZAZ31siARtYmALRRJchYajYz5TANTr5Lg1WokOQLWrsqZCIDl2O/ZWkZSmQxg8kzDBaQREg6gOHmCCD0KJjR7J2FgyVaiYymV24aINXoOE/4897ZaJ91T4rw1zJDhEfmqFXQmp90Z2VQBvtTltoaclb/wCtoRVWB4a7KHwcpJE6EiCQNoBCG0ioQlIzQybqRgX72WwPDxsSBqaUtMTedAdCrODwYNz51raizc0jojgkzFweCcdFcb4UTFF6XhOBDYkAa1ImzTEeY2uVf4XDa0ah03IIF6EbNuVDyo3XjUuTzGD4PuJ8vX8K0zwU6DcxrF1uwbgTMEE0gUEGk2AjouYGiWZ5ANAMxBIoCBQjz3U/tRt/KjHweAbWBbTX2lWMbw45wBhmXVaIqBcXuOq1C+JyjKDTQnQ00Av6pTGyQTSdyQRzOUGfnZR/QVHxIrtFF3hf25g3MKyK5qSaAGv6k6Shw+Fgj/xSN7Wibzrr/Svl8VJglu4tJ10uUscSCQAfzSbAftL97NP51XQTvDW/+hDom9ZvXY8r0VV/DgSSzaItUi4itPn1vYvG3k0/+TcGO+qFvFh1L6CuUaHUHQlL9SXgZlcVwucH6eHJGrZoK+VgTMbKi/g3QRLZFcpIJNgIBqY9pW59YtENNTfWZrpFOqRjcKHAugQDUkVAsBSk1utIzMp4/wDDAxMD7ZMAgNiQ6XyfurYEe/W+c/BMEwSBE6gB1BJ02qvQeK45c2IMATQHLOUfcTpOQUHOAs7EbeupsWmYJAIgxBlWv+mE1XoxXONTG1qaba97pLrEb6rQxmeRroJtpUa67LJxJbfmnf0xSvog4JJgW5/mE7E4F7RPxaF3CY8X7mivcPxwgjEZM7D0kLSEYvsmc5r0ZBxyuV3Hw8HMakDnErlDTNE00ZHl338q7x/BvwywvwwwYmG3EYAcwLHUDv8AIkSQTB9AIVVp72rPfVMazksVE1s5otHfRGAibh/aTIuBFZMg1FIgRF9R5GNO+i0SIsEBMAQhMY1WkRKRJHeqlNZhynM4VaKDMJZEU4laHDeHYjmPe1pLGRmcAYE2B6lE3gbVWlw7HNaWZjlMSAYBOk7q9DPazHA02p7q7wmFFSrRawaGYPOycw5SKG8yJMgEk9xpZRKVGuPFb5PoX/BfEsNjC14E7rL/AOU8KzExHOaAJ915/hcZzaNB51mupMXHe6v4fEQZfUAaGskGPQwY5RSVxtJSckehWy1M9nBttE3rQVgx5THoUeDwFDWYFLZQanX/ACtER/tyhCHDmT89VYwg90QBJjnXSN9ewpnlNMeHnoQOEINYGwBlwqYJjUbGDbqtHBY1p+3MPm0ETQwZNNipwOGJgE84tU0p7Lb4Lw7lC4p+Ryd0caSKuBg5ogO3qaTbXoFdPCOIqaX0Wpw/AQnYmAAsHmbHqjzmLwQislKOBFQKD0BifKx9CtTisSD/AIu9JEyFQwMV+awy1k0kHpXlrvySWYvR0UcfFf8A6AG1azWttfNIbjOH+ZkikR10K3nAQaCflZnGxQ6nTbVUpsOPhTDmuP26a0ibia381V4jiAHlgIkVNZveoHVO4vDYMQPaHAbkgk0tNJKzcp+q4uEBwJrem+tTTbeFtBtinqjQ+oI7quLiNTJpc1rPnUDzAVY4wBiNOcikyI7gpDMWDFusACetgtKMtkXBxFCXTFZJisEGGxQmKwd+iTg8e95yBtCaC8uFBA1/UoXkuoDAmA4XGYiJgVrG8VXY3HDCnCc1plsS6QCZyy4zEDdb44yrk5suWN0lyDwOE84+I0utIiKQKggVBOutVV457GTERS1xAFdBX+KIcLxINYSKOGszM0gVt+YGywuO8SaXfaDFDWptegA3W6ajwcklKTH8Zi1HXamlPhZPEvb1R4+IXEZZymkxExuJpQinRG3BhtbmIoJ1/BhFt9EUo9srZJLSZABrpZNbiy4fcYE39u+SWMFxMAiAev8AauOwGtA5jRaRTMpSVULxOJZNWknyXKfok6H0Uq6kZ7QMtoTw2/ewtpohw8Pf+O7pmWihRNnIgIgFGE2VcwcEUkSK6xp2fJWo2RPIkKw8NWmYFkeDhzS62OH4LdpsfXQLWMaOaU7F+FeGZqmIE3om8UxuFLnEGtOp0Cazjm4JLXtNzBtNP3qqYwjjv+o8fb/qLAD89Up5K4Rri8fZ7S6LGCQ+Mrep/W6vYPh5cTmOUaDz9lZwMuGwW2pTqrbnsLc1hHcarnlmZ2RwccGdi+Htb9xaKUFIFKedkh4LWiRAJnQUsSJNdvLkrPimK4gBkAmBJ50sVPB8AC0TeP8AYzsaUoDdck8zukdmPx+LZV4YjSP8ibTGkk3/APX1T8Qzf0P+xrbLUC3urjuHAuNZnfzVlnCh0HW4PULF5HR0LGrszuF4RxuABJNOZ71Wjw+GatEkwKwImYAv1V3heCdJnyV3A4IzJMRt+Vy5Jto2ikmP8O8PA0r+lvcLwwVPhAdlo4WIAuegkyz/ANeAqXEBNxuOC89xfj7A/LInQC5Q6FGMmK43iIo4GuoEjz2WbjcTkqXCOd40F+noqvHeJ55LWunTMaNpApOp05qtwXBtNXuBrShIApyp5Am6cU30bUkuTQPiZfGRsjU2FqdafCXiOGsV7tKr8VjxGUEaX6CwCpY3EvjMJAkRIqDWJ2pO9iumMPpk38LnEsYR90RGu+kbrIxuKBJykXvMDyEfAUubnYTJuATWNZ6H/H7az5LO4wMY0N+ymVwcAcxEH7RE0Jn/AC1DZgLdRZm2ixhOJMG2+m38x1TMPCw6ZjMyIE1itG3NJlZHGcUZLi0hjTlqJhwAAkiAHXIBq0AXgTm4/FzBAnYihPUzyWseDlm7fdHosH/kOR5awMJgZa0aRDRJJ1rNY6LF8T8Ve/EIbE1AEzE8xQzsCRpWqzS1+IS4kyTJJqTNyZvqrOHwuW7p2nRaRU5GMpY4ddijivJEgigvNQRMibCCI01FCuZw1yQBbWVc+vAhrUnCwXOJ0HdlvHHz9Oeea030HAgBg6kqHNcQSY2/pWcsNAF0OHhaFdCgcbyN8iG4YCY8yeSlwre5Pl3+EtJ8Dir5ZabxLWiAB81XLNe6q5GzH+SA+n6KWsmwnopc30VnAf8AbAPpcytFHmjNy9jMLhgBQhx1IrEjql4sTryohx8QNA0JBIIIkQY+6Ki1qXBVJmOC6SfkIbS4QqlJ2bWA/wBINbFafCcW3Lkc0iYF6GBUzusTheNYLm3I9haWDxzREtMOkBxBh0Xy71Rsvo4wa9G9OC+PrPzEtgAwMtwPcixqsviMT6JAaJp9ooZrADhvNaJmH4rhgTl0iDS3WpUv8QZiEfZS5GWZ0iSepWUkn7OzDJp9ENx3vDXOaGjqdyJsPVW8HBBvWsxJO2sCZr6ra4PxPDe0MyF9xJaGlusAuifdVxwrQ7PkhsUzODYpaWzOt/648kKO/FlviqEnhWiIEkChOk6D1XM4N15gbC+k8jQ+yYeNbE/aYiSHUEzcxYwYvMLuG8Vw5+45aVFj5Eiu9NAbLmnGzpjOhv0HkVGbfcknSsCiucK8sgFhqaVsJid4HTRVh4vhUh7B5iukxJuhxPH8Ef7gxWgj03WbgWshd/8A3cOT9hpQkAyDSnuPVO4bx4utgYu1QBPqQszA8cw8Qw1szSSQ1s7VptSnSqdi+O4bHtaYmYABsQdxosnjkVsvhu4PiOK7/HDA2JM1tUUj1VfisfiARWAdAZg9SJPsOSwuJ/5hko3CMwJALTANajoZiVRxPHeJxa5cjL0H3GgpyqYUvC+hxlT6Rt4+d5OZzjI8toprZLwuGDcx3FezJjRYPE8VimGlxmBmtDQItzsJ390Y+Z2TO7/GYaD9MkVFTFYiNbJxwFSy/wCm1xXH4YoSGnrXf1vRV+IxzldDxLDDgaAEXBF+tLwsfjGQZ+1rTTQ4jaGQCRFZNaGgG4VR/FMaRP3sDm/4ky7fKXNgGaW8iumOOvRyyy30y6OLxKyaV/xIoKEXoQSREbGbULDxmBtXVr9sXip++Z5QPXdJjKJ2qDvsNoj3N1n8ViwSQ08pNY0suuOJrmjlflxvgs4rrmglwJGUQP8AKp1kSLAyDyCo8Sz7hIkDrWDH791LsRxqZ6JRJikz7LRYvpjLyWVcbAFT0HSmsXT+DYJqJEb0BI5RUdyjOHIHWfNWRAC1jiRyzzsq4j9GxKA4B1+NVcOvIJROqtQRm8kvR2GxOGJEpGZCe/NV0Zu32EcSEl7tdVBclOciy4xCc5DiP11+OiDN+vz+Ep7lDZoohZlyruK5Z2WXQ2QhLwLUOnVThA30mJ0TGYYNwuq/hx9FbKZgySDaDKNmGCdKK79H4ApS39KMZhIAzQO/49EtX2L9ELw3wmHizoKbi6qOZBIFR0U47y4uLpkkk0gSTJoKDyUM1j2Obx7tALEQYNT+RoeifgeIOtLo5Cv8Kg0lthzTPqOFzHKlFnRssno2OH40/wCrcUjm6BsdfZW8Ljw0O/8AAJIP3kiZjWZkaefJed/7hAEOIRt4l7qGSDy+YUOFm0c1dm1jeIYksIJLQLOiBWTkIq0GB7pTeOdcuG7s7Qc0g8tOiy3ZTAcfK0fA9V2cRRsidSo/Et+TfJoYPijWifsMyYy1ibur0FRFFYZ4m4iMrckRGWIbeBlpHLrusFj50jatN/0rDsUxdUsJEvKro3BxTXSDSgGm28IzxWGBAgEisCaSCRUcr0vdYOGJpadfi6snDAoSbW67oWBCflf6aR8XgZcNrRE1gF2lTHMDVV3+JOzGomDlEQRN+tfRUfpi80olfTaHEzU7c/wj8Q/pNt3iMNgNIO/8JWLX/YinWdpWc17Rv+lBxpPJWsSM5eRL0WZE1k6gGs7qtjPAdQU05IsNrnTlBJgmgJgCpNNklyv816Mf2k+xx4l2iGSb1AS8y4mCR5Gv6uqom+RzTO1ibgW668lJdPkq2ZcHpj5Y6VwfRKzU773UOeEWCiPbiCOe86eQmecoDiJBffy7PsgL0rGosf8AUqlvekZkL393vbzS2LUBpchc/dILlDnKHItIJxQF6gvQ81DZSiCSpQF65TZdF7DfFJpeJpKstxAs9jlf8OwmPdGJifTbDjmyl1QCQIFamByldKkcTiOfjyZADeQmB0kk+6A426rQZTPpyr2ZOkfYbcQaIcTDnee/4UFsWUaGT7de9Um/o1GuhLsJxtOnfyntwREkyb1SyUIJU8F8sbiPbapHc+6b/wBt5AAiBJAprA/AVUDvqpTTE4IYJmZIMzM1XNYJmFEd7LplLgOR2YRau6lpSgmRBjYxcdnyVGbQ0YiHOUrMolAakly4vvuoEf33KElItIYKlNY0wToLnraUoiNQaAyJ1Exa4semoQuKAoaMUioMXFDFxVBmQZ0JelZWo7PzQFyVKglKytQy5dmQFylomYBMCTeg1NLAU9QlY6CDrfmxUOclnEpbz77ogJSspIYDroLnQSozTt3RLmhr/KAOUtlUMzQQfMXH53UEzqYG+3T1oga8iYJEiDzG3RCXJWMMlAShzIXOUtlJBFyEOIMjQivPRC86CtrSlu3UNlUE5/RclT3RcpsdFpmKnYTlSY9Pa9bqZi4F3DcnNcqLMSicHx5HbubLRSMXAsEoZVf6ik4iewKA2UTYrX+apIIivlzv+o8xzUhyNitRkqAgzpmK5s/bmiP9om1bGvfmrHRIO3kuJSi9cHp7C1LFN/0EGZKOJ3OncKM6NhaDiVzXx6EetEkOlcHpbBoOB79f6USkZ1LnjSYgfFfeUbD1HyuDhrb1hJLu9gbdVGZFjURmaPf37lDmQnQ5gZmlZEHWkV5FBm5KbKoZmUOclB3fwpBJoiwoMFDmS86IH3p+fKyWxVBtEoC63euvP9IC5RKlyChn1Lita0PzuhPXvmlvKEuU7FKIxxQucn8F4g/BcXMyyWuaZa14h7YNCIBg+RVSTWsTSNSDX0slsVqEe/dA5D9SkaXQlQ5FahixPc7HagcecJd1zt/dAOX7UtjoJ7iSSak3JvOq5ACNz6T+VKVj1Cw8SBQ1Mg7xEba1sayja9Vhp3qjD++SakJxLbcTv0RfUSHP969Lhc16tSIcSwcRcHd/wksK4OKewtS1nXFyrB0X72U5k9halsEQDOpBHIAEH3PoozquTCK08jHz+k9g1G51IxKen8quHrsyNg1H5+X9c/bu0B6UMShECpBmKiARAOgM1GsDZRKNg1H/AFOalpv37a6JGddmRsLUfn37K4vScygnbvdGw6HkwOokUuPzWfRcX8/L+hCQcSbyfPzUFyNg1HZlDnzqlShc5LYNRsrsyQHrpS2HqPOIoZiVSC5RmScikhzTWPWoQ5kvNohlLYdDsN3d9EOalkmVBKnYqhuZQSO/JLldnP48q/s+qVjoIvmpk+f5UE9UWMIDdZE8x9zhHSk+aQX7qWxpDc0C0mDeaDlz/wAuXygaZMb0iYvaptVLJUv/AAD6iVLkOiCVyErkrHR//9k=', planetClass: 'planet-galaxy' },
-        { id: 'nebula', name: 'Туманность Ориона', type: 'Туманность', desc: 'Активные «звёздные ясли». Прямо сейчас здесь из газа и пыли рождаются сотни новых звёзд.', imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/cd/M8_Lagoon_Nebula_-_M20_Trifid_Nebula.jpg', planetClass: 'planet-nebula' }
+        { id: 'sun', name: 'Солнце', type: 'Звезда', desc: 'Центр нашей системы. Температура ядра — 15 миллионов градусов. Каждую секунду превращает 600 млн тонн водорода в гелий.', imgUrl: '', planetClass: 'planet-sun' },
+        { id: 'mercury', name: 'Меркурий', type: 'Планета', desc: 'Ближайшая к Солнцу планета. Перепады температур: от +430°C днём до -180°C ночью.', imgUrl: '', planetClass: 'planet-mercury' },
+        { id: 'venus', name: 'Венера', type: 'Планета', desc: 'Самая горячая планета. Атмосфера из углекислого газа создаёт сильнейший парниковый эффект.', imgUrl: '', planetClass: 'planet-venus' },
+        { id: 'earth', name: 'Земля', type: 'Планета', desc: 'Наш дом. 71% поверхности покрыто водой. Единственная известная планета, на которой есть жизнь.', imgUrl: '', planetClass: 'planet-earth' },
+        { id: 'mars', name: 'Марс', type: 'Планета', desc: 'Красная планета. Здесь находится Олимп — высочайший вулкан в Солнечной системе (выше Эвереста в 2.5 раза).', imgUrl: '', planetClass: 'planet-mars' },
+        { id: 'jupiter', name: 'Юпитер', type: 'Газовый гигант', desc: 'Крупнейшая планета. Большое Красное Пятно — гигантский шторм, который бушует уже более 350 лет.', imgUrl: '', planetClass: 'planet-jupiter' },
+        { id: 'saturn', name: 'Сатурн', type: 'Газовый гигант', desc: 'Великолепная система колец из миллиардов частичек льда и пыли. Плотность меньше плотности воды.', imgUrl: '', planetClass: 'planet-saturn' },
+        { id: 'uranus', name: 'Уран', type: 'Ледяной гигант', desc: 'Вращается «лёжа на боку» — ось наклонена почти на 98 градусов из-за древнего столкновения.', imgUrl: '', planetClass: 'planet-uranus' },
+        { id: 'neptune', name: 'Нептун', type: 'Ледяной гигант', desc: 'Самая ветреная планета. Скорость ветра здесь достигает 2100 км/ч.', imgUrl: '', planetClass: 'planet-neptune' },
+        { id: 'moon', name: 'Луна', type: 'Спутник', desc: 'Единственный спутник Земли. Всегда повёрнута к нам одной стороной из-за приливного захвата.', imgUrl: '', planetClass: 'planet-moon' },
+        { id: 'galaxy', name: 'Млечный Путь', type: 'Галактика', desc: 'Наша галактика. Содержит от 100 до 400 миллиардов звёзд. В центре — сверхмассивная чёрная дыра.', imgUrl: '', planetClass: 'planet-galaxy' },
+        { id: 'nebula', name: 'Туманность Ориона', type: 'Туманность', desc: 'Активные «звёздные ясли». Прямо сейчас здесь из газа и пыли рождаются сотни новых звёзд.', imgUrl: '', planetClass: 'planet-nebula' }
       ];
 
+      // --- СИСТЕМА ОЦЕНКИ ---
+      const TOTAL_PAIRS = spaceData.length; // 12 пар
+      const PERFECT_MOVES = TOTAL_PAIRS; // 12 ходов — идеал (каждый ход открывает пару)
+      const MAX_SCORE = 10000;
+
+      function calculateScore(moves, timeSeconds) {
+        // Идеальные показатели
+        const idealMoves = PERFECT_MOVES;
+        const idealTime = 30; // 30 секунд — эталонное время
+
+        // Штраф за лишние ходы (каждый ход сверх идеала снижает оценку)
+        const extraMoves = Math.max(0, moves - idealMoves);
+        const movePenalty = extraMoves * 120; // -120 очков за каждый лишний ход
+
+        // Штраф за время (каждая секунда сверх эталона снижает оценку)
+        const extraTime = Math.max(0, timeSeconds - idealTime);
+        const timePenalty = extraTime * 8; // -8 очков за каждую лишнюю секунду
+
+        // Базовая оценка
+        let score = MAX_SCORE - movePenalty - timePenalty;
+
+        // Бонус за скорость (если быстрее эталона)
+        if (timeSeconds < idealTime) {
+          const timeBonus = (idealTime - timeSeconds) * 15;
+          score += timeBonus;
+        }
+
+        // Бонус за точность (если ходов меньше или равно идеалу)
+        if (moves <= idealMoves) {
+          const accuracyBonus = (idealMoves - moves + 1) * 200;
+          score += accuracyBonus;
+        }
+
+        // Ограничение
+        score = Math.max(100, Math.min(MAX_SCORE + 2000, Math.round(score)));
+
+        return score;
+      }
+
+      function calculateAccuracy(moves) {
+        if (moves === 0) return 100;
+        const accuracy = Math.round((TOTAL_PAIRS / moves) * 100);
+        return Math.min(100, accuracy);
+      }
+
+      function getStars(score) {
+        if (score >= 9000) return '★★★★★';
+        if (score >= 7000) return '★★★★☆';
+        if (score >= 5000) return '★★★☆☆';
+        if (score >= 3000) return '★★☆☆☆';
+        return '★☆☆☆☆';
+      }
+
+      function getRank(score) {
+        if (score >= 9500) return 'Гранд-мастер Галактики';
+        if (score >= 8000) return 'Капитан Звёздного Флота';
+        if (score >= 6500) return 'Офицер-исследователь';
+        if (score >= 5000) return 'Космический навигатор';
+        if (score >= 3500) return 'Пилот-стажёр';
+        if (score >= 2000) return 'Кадет Академии';
+        return 'Космический турист';
+      }
+
+      function getRankColor(score) {
+        if (score >= 8000) return 'linear-gradient(135deg, #fbbf24, #f59e0b)';
+        if (score >= 6000) return 'linear-gradient(135deg, #c084fc, #a855f7)';
+        if (score >= 4000) return 'linear-gradient(135deg, #22d3ee, #06b6d4)';
+        if (score >= 2000) return 'linear-gradient(135deg, #94a3b8, #64748b)';
+        return 'linear-gradient(135deg, #ef4444, #dc2626)';
+      }
+
+      function updateEfficiency() {
+        if (state.moves === 0) {
+          document.getElementById('efficiency-percent').textContent = '100%';
+          document.getElementById('efficiency-fill').style.width = '100%';
+          return;
+        }
+        const accuracy = calculateAccuracy(state.moves);
+        document.getElementById('efficiency-percent').textContent = accuracy + '%';
+        document.getElementById('efficiency-fill').style.width = accuracy + '%';
+
+        // Цвет индикатора в зависимости от эффективности
+        const fill = document.getElementById('efficiency-fill');
+        if (accuracy >= 80) {
+          fill.style.background = 'linear-gradient(90deg, #22d3ee, #c084fc)';
+        } else if (accuracy >= 50) {
+          fill.style.background = 'linear-gradient(90deg, #fbbf24, #f59e0b)';
+        } else {
+          fill.style.background = 'linear-gradient(90deg, #f87171, #ef4444)';
+        }
+      }
+
+      // --- СОСТОЯНИЕ ИГРЫ ---
       let state = { cards: [], flipped: [], matched: 0, moves: 0, timer: 0, interval: null, hintsLeft: 2, locked: false, gameStarted: false };
 
       // Парящая пыль
@@ -911,6 +1132,7 @@
         if (state.flipped.length === 2) {
           state.moves++;
           document.getElementById('moves').textContent = state.moves;
+          updateEfficiency();
           state.locked = true;
           checkMatch();
         }
@@ -956,8 +1178,26 @@
 
       function victory() {
         clearInterval(state.interval);
+
+        const score = calculateScore(state.moves, state.timer);
+        const accuracy = calculateAccuracy(state.moves);
+        const stars = getStars(score);
+        const rank = getRank(score);
+        const rankColor = getRankColor(score);
+
         document.getElementById('final-moves').textContent = state.moves;
         document.getElementById('final-time').textContent = fmtTime(state.timer);
+        document.getElementById('final-accuracy').textContent = accuracy + '%';
+        document.getElementById('final-score').textContent = score;
+        document.getElementById('win-stars').textContent = stars;
+
+        const rankEl = document.getElementById('rank-title');
+        rankEl.textContent = rank;
+        rankEl.style.background = rankColor;
+        rankEl.style.webkitBackgroundClip = 'text';
+        rankEl.style.webkitTextFillColor = 'transparent';
+        rankEl.style.backgroundClip = 'text';
+
         document.getElementById('win-screen').classList.add('visible');
       }
 
@@ -969,6 +1209,7 @@
         document.getElementById('hints-count').textContent = '(2)';
         document.getElementById('win-screen').classList.remove('visible');
         document.getElementById('inventory').innerHTML = '';
+        updateEfficiency();
         buildBoard();
       }
 
