@@ -815,6 +815,9 @@
       justify-content: center;
       font-size: 1.4rem;
       flex-shrink: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
     /* Линии соединения */
@@ -823,6 +826,11 @@
       inset: 0;
       pointer-events: none;
       z-index: 25;
+      display: none;
+    }
+
+    .connections-canvas.visible {
+      display: block;
     }
 
     .match-score-display {
@@ -1711,14 +1719,15 @@
       };
 
       // ⚠️⚠️⚠️ ДАННЫЕ ДЛЯ ИГРЫ «ПЛАНЕТЫ И СПУТНИКИ» ⚠️⚠️⚠️
+      // planetImgUrl / moonImgUrl — ссылки на картинки (пустая строка = цветной кружок planetClass / moonClass)
       const planetMoonPairs = [
-        { planet: 'Земля', planetIcon: '🌍', planetClass: 'planet-earth', moon: 'Луна', moonIcon: '🌙', moonClass: 'planet-moon' },
-        { planet: 'Марс', planetIcon: '🔴', planetClass: 'planet-mars', moon: 'Фобос и Деймос', moonIcon: '🪨', moonClass: 'planet-mercury' },
-        { planet: 'Юпитер', planetIcon: '🟤', planetClass: 'planet-jupiter', moon: 'Ганимед', moonIcon: '💫', moonClass: 'planet-venus' },
-        { planet: 'Сатурн', planetIcon: '🪐', planetClass: 'planet-saturn', moon: 'Титан', moonIcon: '🌕', moonClass: 'planet-sun' },
-        { planet: 'Уран', planetIcon: '🔵', planetClass: 'planet-uranus', moon: 'Титания', moonIcon: '❄️', moonClass: 'planet-neptune' },
-        { planet: 'Нептун', planetIcon: '🟣', planetClass: 'planet-neptune', moon: 'Тритон', moonIcon: '🧊', moonClass: 'planet-uranus' },
-        { planet: 'Плутон', planetIcon: '🤎', planetClass: 'planet-mercury', moon: 'Харон', moonIcon: '🪨', moonClass: 'planet-moon' }
+        { planet: 'Земля', planetIcon: '🌍', planetClass: 'planet-earth', planetImgUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/22/Earth_DSCOVR_2023-05-05.jpg', moon: 'Луна', moonIcon: '🌙', moonClass: 'planet-moon', moonImgUrl: 'https://images-assets.nasa.gov/image/PIA00405/PIA00405~large.jpg?w=1920&h=1920&fit=clip&crop=faces%2Cfocalpoint', moonId: 'moon' },
+        { planet: 'Марс', planetIcon: '🔴', planetClass: 'planet-mars', planetImgUrl: 'https://avatars.mds.yandex.net/i?id=c8e2cecd1c01e4255bd860a370556992_l-11777771-images-thumbs&n=13', moon: 'Фобос и Деймос', moonIcon: '🪨', moonClass: 'planet-mercury', moonImgUrl: '', moonId: 'phobos-deimos', moonDesc: 'Фобос и Деймос — два маленьких спутника Марса, открытые в 1877 году. Фобос ближе к планете и движется быстрее, чем вращается Марс; со временем он приближается к поверхности. Деймос — более далёкий и медленный. Оба тела нерегулярной формы и похожи на астероиды.' },
+        { planet: 'Юпитер', planetIcon: '🟤', planetClass: 'planet-jupiter', planetImgUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Jupiter_130115.JPG/250px-Jupiter_130115.JPG', moon: 'Ганимед', moonIcon: '💫', moonClass: 'planet-venus', moonImgUrl: '', moonId: 'ganymede', moonDesc: 'Ганимед — крупнейший спутник Юпитера и самый большой спутник в Солнечной системе; его диаметр больше диаметра Меркурия. У него есть собственное магнитное поле и слоистая внутренняя структура с возможным подповерхностным океаном.' },
+        { planet: 'Сатурн', planetIcon: '🪐', planetClass: 'planet-saturn', planetImgUrl: 'https://avatars.mds.yandex.net/i?id=eacb002e1e467e8151018c171cc185d2_l-5886707-images-thumbs&n=13', moon: 'Титан', moonIcon: '🌕', moonClass: 'planet-sun', moonImgUrl: '', moonId: 'titan', moonDesc: 'Титан — крупнейший спутник Сатурна и единственный спутник с плотной атмосферой, в которой преобладает азот. На его поверхности есть озёра и моря из жидких углеводородов. Аппарат «Гюйгенс» в 2005 году совершил посадку на Титан.' },
+        { planet: 'Уран', planetIcon: '🔵', planetClass: 'planet-uranus', planetImgUrl: 'https://images-assets.nasa.gov/image/PIA18182/PIA18182~orig.jpg?w=1720&h=1720&fit=clip&crop=faces%2Cfocalpoint', moon: 'Титания', moonIcon: '❄️', moonClass: 'planet-neptune', moonImgUrl: '', moonId: 'titania', moonDesc: 'Титания — крупнейший спутник Урана, открытый Уильямом Гершелем в 1787 году. Поверхность покрыта льдом и следами древней тектоники; на снимках «Вояджера-2» видны долины и разломы.' },
+        { planet: 'Нептун', planetIcon: '🟣', planetClass: 'planet-neptune', planetImgUrl: 'https://assets.science.nasa.gov/dynamicimage/assets/science/psd/solar/2023/09/p/i/a/0/PIA01492-1.jpg?w=2188&h=2185&fit=clip&crop=faces%2Cfocalpoint', moon: 'Тритон', moonIcon: '🧊', moonClass: 'planet-uranus', moonImgUrl: '', moonId: 'triton', moonDesc: 'Тритон — крупнейший спутник Нептуна, движущийся по орбите в обратном направлении. Вероятно, он захвачен гравитацией планеты. На поверхности — азотный лёд, гейзеры и мало кратеров из-за молодой поверхности.' },
+        { planet: 'Плутон', planetIcon: '🤎', planetClass: 'planet-mercury', planetImgUrl: '', moon: 'Харон', moonIcon: '🪨', moonClass: 'planet-moon', moonImgUrl: '', moonId: 'charon', moonDesc: 'Харон — крупнейший спутник Плутона; вместе они образуют почти двойную систему: центр масс находится вне Плутона. На Хароне есть тёмный полюс и светлые равнины, а зонд «Новые горизонты» передал их детальные снимки в 2015 году.' }
       ];
 
       // --- ТЕКУЩАЯ ИГРА ---
@@ -1949,6 +1958,18 @@
       }
 
       // ============ ПЕРЕКЛЮЧЕНИЕ ИГР ============
+      function clearConnectionsCanvas() {
+        const canvas = document.getElementById('connections-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function setConnectionsCanvasVisible(visible) {
+        const canvas = document.getElementById('connections-canvas');
+        canvas.classList.toggle('visible', visible);
+        if (!visible) clearConnectionsCanvas();
+      }
+
       function switchGame(game) {
         currentGame = game;
         document.getElementById('switch-memory').classList.toggle('active', game === 'memory');
@@ -1958,6 +1979,7 @@
         const matchContainer = document.getElementById('match-game');
 
         if (game === 'memory') {
+          setConnectionsCanvasVisible(false);
           memoryGrid.style.display = 'grid';
           matchContainer.classList.remove('active');
           document.getElementById('moves-label').textContent = 'Ходов';
@@ -1966,6 +1988,7 @@
           document.getElementById('hints-count').textContent = `(${state.hintsLeft})`;
           document.getElementById('hint-btn').style.display = 'flex';
         } else {
+          setConnectionsCanvasVisible(true);
           memoryGrid.style.display = 'none';
           matchContainer.classList.add('active');
           document.getElementById('moves-label').textContent = 'Попыток';
@@ -2026,9 +2049,25 @@
         }
       }
 
+      function getCollectibleData(id) {
+        const fromSpace = spaceData.find(d => d.id === id);
+        if (fromSpace) return fromSpace;
+        const pair = planetMoonPairs.find(p => p.moonId === id);
+        if (!pair) return null;
+        return {
+          id: pair.moonId,
+          name: pair.moon,
+          type: 'Спутник',
+          desc: pair.moonDesc || '',
+          imgUrl: pair.moonImgUrl || '',
+          planetClass: pair.moonClass
+        };
+      }
+
       function addInventory(id) {
         if (document.querySelector(`.inv-badge[data-id="${id}"]`)) return;
-        const data = spaceData.find(d => d.id === id);
+        const data = getCollectibleData(id);
+        if (!data) return;
         const badge = document.createElement('div');
         badge.className = 'inv-badge pop-anim';
         badge.dataset.id = id;
@@ -2040,8 +2079,13 @@
         assistantReact('memoryMatch', { name: data.name });
       }
 
+      function addMoonInventory(pair) {
+        if (pair && pair.moonId) addInventory(pair.moonId);
+      }
+
       function showInfo(id) {
-        const d = spaceData.find(x => x.id === id);
+        const d = getCollectibleData(id);
+        if (!d) return;
         document.getElementById('info-title').textContent = d.name;
         document.getElementById('info-desc').textContent = d.desc;
         document.getElementById('info-modal').classList.add('active');
@@ -2076,6 +2120,13 @@
       }
 
       // ============ ИГРА «СОЕДИНИ ПЛАНЕТЫ СО СПУТНИКАМИ» ============
+      function buildMatchIconHtml(imgUrl, planetClass) {
+        if (imgUrl && imgUrl.trim() !== '') {
+          return `<div class="match-icon" style="background-image:url('${imgUrl}')"></div>`;
+        }
+        return `<div class="match-icon ${planetClass}"></div>`;
+      }
+
       function shuffleArray(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -2102,7 +2153,7 @@
           item.className = 'match-item planet-item';
           item.dataset.pairIndex = planetMoonPairs.indexOf(pair);
           item.dataset.type = 'planet';
-          item.innerHTML = `<div class="match-icon ${pair.planetClass}"></div><span>${pair.planetIcon} ${pair.planet}</span>`;
+          item.innerHTML = `${buildMatchIconHtml(pair.planetImgUrl, pair.planetClass)}<span>${pair.planetIcon} ${pair.planet}</span>`;
           item.addEventListener('click', () => onPlanetClick(item, pair));
           planetsCol.appendChild(item);
           matchState.planets.push(item);
@@ -2113,7 +2164,7 @@
           item.className = 'match-item moon-item';
           item.dataset.pairIndex = planetMoonPairs.indexOf(pair);
           item.dataset.type = 'moon';
-          item.innerHTML = `<div class="match-icon ${pair.moonClass}"></div><span>${pair.moonIcon} ${pair.moon}</span>`;
+          item.innerHTML = `${buildMatchIconHtml(pair.moonImgUrl, pair.moonClass)}<span>${pair.moonIcon} ${pair.moon}</span>`;
           item.addEventListener('click', () => onMoonClick(item, pair));
           moonsCol.appendChild(item);
           matchState.moons.push(item);
@@ -2174,6 +2225,7 @@
             matchState.selectedPlanet.el.classList.remove('selected');
             matchState.selectedMoon.el.classList.remove('selected');
             matchState.matchedPairs.push(planetPair.planet);
+            addMoonInventory(planetPair);
 
             drawConnections(true);
 
@@ -2360,9 +2412,8 @@
         buildMemoryBoard();
         buildMatchGame();
 
-        const canvas = document.getElementById('connections-canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        setConnectionsCanvasVisible(currentGame === 'match');
+        if (currentGame === 'match') drawConnections();
 
         assistantReact('restart');
       }
